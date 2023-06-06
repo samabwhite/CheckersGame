@@ -2,15 +2,27 @@ package core;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+/**
+ * The Computer class represents the Computer/AI player you can select to play against.
+ * @author Samuel White
+ */
 public class Computer extends Player{
     private CheckersLogic game;
 
+    /**
+     * Constructs a new Computer player with the specified computerIcon and game.
+     * @param computerIcon the icon representing the computer player.
+     * @param game the CheckersLogic instance representing the game.
+     */
     public Computer(char computerIcon, CheckersLogic game) {
         super(computerIcon);
         this.game = game;
     }
 
-
+    /**
+     * Makes the computer player take its turn.
+     * @return a string representing the move command for the computer player.
+     */
     public String takeTurn() {
         int[][] movablePieces = allPieces();
         int[][] move = assessMoves(movablePieces);
@@ -18,9 +30,11 @@ public class Computer extends Player{
         return moveCommand;
     }
 
+    /**
+     * Retrieves all possible pieces that the computer player can move.
+     * @return a 2D array containing the coordinates of all movable pieces.
+     */
     public int[][] allPieces() {
-        // next step is implementing this method, might need to create a function for the checkers logic class so you can just call it to this one  :)
-        // returns all possible pieces to move
         int direction = 1;
         ArrayList<int[]> output = new ArrayList<>();
 
@@ -60,6 +74,11 @@ public class Computer extends Player{
         return game.convertToArray(output);
     }
 
+    /**
+     * Assesses the available moves for the computer player and selects the best move.
+     * @param movablePieces a 2D array containing the coordinates of all movable pieces.
+     * @return a 2D array representing the selected move coordinates.
+     */
     public int[][] assessMoves(int[][] movablePieces) {
         for (int[] piece : movablePieces) {
             int[][] possibleJumps = game.getPossibleJumps(piece);
@@ -81,6 +100,11 @@ public class Computer extends Player{
         return null;
     }
 
+    /**
+     * Converts the move coordinates from the index format to a string representation.
+     * @param index a 2D array representing the move coordinates in index format.
+     * @return a string representing the move command.
+     */
     public String indexConversion(int[][] index) {
         String outputString = "";
         HashMap<Integer, Character> hashmap = new HashMap<>();

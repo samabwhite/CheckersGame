@@ -25,7 +25,7 @@ public class CheckersLogic {
         }
     }
 
-/*
+
     private char[][] boardState = {{'_', 'o', '_', 'o', '_', 'o', '_', 'o'},
             {'o', '_', 'o', '_', 'o', '_', 'o', '_'},
             {'_', 'o', '_', 'o', '_', 'o', '_', 'o'},
@@ -35,15 +35,7 @@ public class CheckersLogic {
             {'_', 'x', '_', 'x', '_', 'x', '_', 'x'},
             {'x', '_', 'x', '_', 'x', '_', 'x', '_'}};
 
-*/
-    private char[][] boardState = {{'_', 'o', '_', 'o', '_', 'o', '_', 'o'},
-                                   {'o', '_', 'o', '_', 'o', '_', 'o', '_'},
-                                   {'_', 'o', '_', 'o', '_', 'o', '_', 'o'},
-                                   {'_', '_', '_', '_', '_', '_', '_', '_'},
-                                   {'_', '_', '_', '_', '_', '_', '_', '_'},
-                                   {'x', '_', 'x', '_', 'x', '_', 'x', '_'},
-                                   {'_', 'x', '_', 'x', '_', 'x', '_', 'x'},
-                                   {'x', '_', 'x', '_', 'x', '_', 'x', '_'}};
+
 
 
     /**
@@ -58,7 +50,10 @@ public class CheckersLogic {
         this.currentPlayersTurn = this.player1;
     }
 
-
+    /**
+     * Sets up the player vs computer game configuration with one player and their initial position.
+     * It incorporates a new Computer class as player 2.
+     */
     public void computerGameSetup() {
         this.player1 = new Player('x');
         this.player2 = new Computer('o', this);
@@ -104,14 +99,14 @@ public class CheckersLogic {
      * @param move The move string representing the piece's current position and the desired destination.
      * @return True if the move was successful, false otherwise.
      */
-    public boolean makeMove(String move) {
-        if (move.length() != 5) return false;
+    public boolean makeMove(String move) throws IllegalArgumentException{
+        if (move.length() != 5) throw new IllegalArgumentException();
 
         int[][] indices = convertToIndices(move);
-        if (indices == null) return false;
+        if (indices == null) throw new IllegalArgumentException();
         int[] piece = indices[0];
         int[] destination = indices[1];
-        if (!moveCommandIsValid(indices)) return false;
+        if (!moveCommandIsValid(indices)) throw new IllegalArgumentException();
 
         movePiece(piece, destination);
 
@@ -197,7 +192,6 @@ public class CheckersLogic {
      */
     public boolean canMoveHere(int[] location) {
         return withinBoard(location) && spotIsOpen(location);
-
     }
 
     /**
@@ -229,12 +223,15 @@ public class CheckersLogic {
      *
      * @param selection The index of the selected double jump option.
      */
-    public void selectDoubleOption(int selection) {
-        int[] selectedDoubleJump = currentPlayersTurn.doubleJumpLocations[selection - 1];
-        int[] pieceLocation = currentPlayersTurn.doubleJumpPiece;
-        movePiece(pieceLocation, selectedDoubleJump);
-        jump(pieceLocation, selectedDoubleJump);
-
+    public void selectDoubleOption(int selection) throws IndexOutOfBoundsException{
+        try {
+            int[] selectedDoubleJump = currentPlayersTurn.doubleJumpLocations[selection - 1];
+            int[] pieceLocation = currentPlayersTurn.doubleJumpPiece;
+            movePiece(pieceLocation, selectedDoubleJump);
+            jump(pieceLocation, selectedDoubleJump);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException();
+        }
         currentPlayersTurn.goAgain = false;
         currentPlayersTurn.doubleJumpOptions = null;
         currentPlayersTurn.doubleJumpLocations = null;
@@ -375,7 +372,7 @@ public class CheckersLogic {
             pieceColumn = hashmap.get(move.charAt(1));
             locationColumn = hashmap.get(move.charAt(4));
         } catch (NullPointerException e) {
-            System.out.println("Invalid move: Character not found in HashMap.");
+            System.out.println("Invalid move: Character not found in board coordinates.");
             return null;
         }
 

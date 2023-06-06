@@ -63,6 +63,10 @@ public class CheckersTextConsole {
     }
 
 
+    /**
+     * Prompts the user to choose whether to play against another player or against the computer.
+     * @return true if the user chooses to play against the computer, false if the user chooses to play against another player.
+     */
     public boolean playComputer() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Begin Game. Enter ‘P’ if you want to play against another player; enter ‘C’ to play against computer. ");
@@ -121,19 +125,31 @@ public class CheckersTextConsole {
         while (!pass) {
             System.out.print("Your Move: ");
             String move = scanner.next();
-            pass = rules.makeMove(move);
-            if (rules.getCurrentPlayersTurn().goAgain) {
-                if (rules.getCurrentPlayersTurn() instanceof core.Computer) {
-                    rules.selectDoubleOption(1);
-                    return;
-                }
-                System.out.println("There are double jump options, please select one by typing it's respective number. i.e. 1");
-                System.out.println(rules.getCurrentPlayersTurn().doubleJumpOptions);
-                int doubleJumpSelection = scanner.nextInt();
-                rules.selectDoubleOption(doubleJumpSelection);
-            }
-            if (!pass) {
+            try {
+                pass = rules.makeMove(move);
+            } catch (IllegalArgumentException e) {
                 System.out.println("The move command given has an incorrect format, try again.");
+            }
+            pass = true;
+            boolean pass2 = false;
+            while (!pass2) {
+                if (rules.getCurrentPlayersTurn().goAgain) {
+                    if (rules.getCurrentPlayersTurn() instanceof core.Computer) {
+                        rules.selectDoubleOption(1);
+                        return;
+                    }
+                    System.out.println("There are double jump options, please select one by typing it's respective number. i.e. 1");
+                    System.out.println(rules.getCurrentPlayersTurn().doubleJumpOptions);
+                    try {
+                        int doubleJumpSelection = scanner.nextInt();
+                        rules.selectDoubleOption(doubleJumpSelection);
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("Selected double jump has an incorrect format, try again.");
+                    }
+                    pass2 = !(rules.getCurrentPlayersTurn().goAgain);
+                } else {
+                    pass2 = true;
+                }
             }
         }
     }
