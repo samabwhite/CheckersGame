@@ -1,6 +1,8 @@
 package ui;
 import core.CheckersLogic;
+
 import java.util.Scanner;
+import javafx.application.Application;
 
 
 /**
@@ -19,6 +21,21 @@ public class CheckersTextConsole {
      */
     public static void main(String[] args) {
         CheckersTextConsole game = new CheckersTextConsole();
+        boolean pass = false;
+        boolean result = false;
+        while (!pass) {
+            try {
+                result = game.consoleOrGui();
+                pass = true;
+            } catch (IllegalArgumentException e) {
+                pass = false;
+            }
+        }
+
+        if (result) {
+            Application.launch(CheckersGUI.class, args);
+            return;
+        }
 
         if (game.playComputer()) {
             CheckersLogic rules = new CheckersLogic("PvC");
@@ -59,6 +76,28 @@ public class CheckersTextConsole {
                 }
                 rules.swapTurn();
             }
+        }
+    }
+
+
+    /**
+
+     Prompts the user to choose between playing with Console or GUI.
+
+     @return {@code true} if the user chooses GUI, {@code false} if the user chooses Console.
+
+     @throws IllegalArgumentException if the user provides an incorrect input.
+     */
+    public boolean consoleOrGui() throws IllegalArgumentException{
+        System.out.println("Play with Console or GUI? Type C for console or G for GUI:");
+        Scanner scanner = new Scanner(System.in);
+        String choice = scanner.next().substring(0);
+        if (choice.equals("C")) {
+            return false;
+        } else if (choice.equals("G")) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Incorrect input, try again!");
         }
     }
 

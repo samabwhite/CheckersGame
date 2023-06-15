@@ -38,6 +38,8 @@ public class CheckersLogic {
 
 
 
+
+
     /**
      * Sets up the standard game configuration with two players and their initial positions.
      * This can be modified later to add more options for game setup or test individual cases.
